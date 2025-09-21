@@ -14,7 +14,7 @@ export class UsersController {
 
   @Get('profile')
   async getProfile(@Req() req: Request) {
-    if (!req.user || typeof req['user_cid'] !== 'string') {
+    if (typeof req['user_cid'] !== 'string') {
       throw new HttpException('Invalid user data', HttpStatus.BAD_REQUEST);
     }
     const user = this.usersService.findOne(req['user_cid']);
