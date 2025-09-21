@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Response } from 'express';
 
 @Injectable()
 export class FrontendService {
@@ -16,15 +15,8 @@ export class FrontendService {
     );
   }
 
-  async serveFrontend(res: Response) {
-    if (this.isProduction) {
-      // in production, serve static files
-      res.sendFile('index.html', { root: './public' });
-    } else {
-      // otherwise, redirect to vite dev server
-      if (await this.isFrontendDevActive()) res.redirect(this.frontendDevUrl);
-      else res.status(404).send({ message: 'Frontend is not launched yet' });
-    }
+  getIsProduction() {
+    return this.isProduction;
   }
 
   getFrontendUrl(): string {

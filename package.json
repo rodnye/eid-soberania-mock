@@ -6,9 +6,9 @@
   "scripts": {
     "postinstall": "pnpm i -F ./frontend && pnpm i -F ./backend",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"pnpm dev -F ./frontend\" \"pnpm start:dev -F ./backend\"",
+    "dev": "concurrently \"pnpm -F ./frontend dev\" \"pnpm -F ./backend start:dev\"",
     "build": "node scripts/build.js",
-    "start": "cd backend && pnpm start"
+    "start": "pnpm -F ./backend start"
   },
   "keywords": [],
   "author": "",

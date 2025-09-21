@@ -9,10 +9,10 @@ import { OAuthService } from './oauth.service';
 import { ClientsService } from '../clients/clients.service';
 import { UsersService } from '../users/users.service';
 
-@Controller('api/oauth')
+@Controller('/api/oauth')
 export class OAuthController {
   constructor(
-    private readonly oauthService: OAuthService,
+    private readonly service: OAuthService,
     private readonly clientsService: ClientsService,
     private readonly usersService: UsersService,
   ) {}
@@ -42,7 +42,7 @@ export class OAuthController {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
 
-    const authCode = await this.oauthService.generateAuthorizationCode(
+    const authCode = await this.service.generateAuthorizationCode(
       clientId,
       redirectUri,
       scope,
@@ -61,6 +61,6 @@ export class OAuthController {
 
   @Post('exchange')
   async exchangeCode(@Body('code') code: string) {
-    return await this.oauthService.exchangeAuthorizationCode(code);
+    return await this.service.exchangeAuthorizationCode(code);
   }
 }

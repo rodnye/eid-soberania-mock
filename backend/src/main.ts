@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
+import * as pkg from '../package.json';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
-import * as pkg from '../package.json';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -11,14 +11,17 @@ async function bootstrap() {
   const port = configService.get<number>('PORT', 3000);
   const isProduction = configService.get('NODE_ENV') === 'production';
 
-  if (isProduction) {
-    app.useStaticAssets(join(__dirname, '..', 'public/dist'), {
-      index: false,
-      redirect: false,
-    });
-  } else {
+  app.useStaticAssets(join(__dirname, '../../public/dist'), {
+    index: false,
+    fallthrough: true,
+  });
+
+  if (!isProduction) {
     app.enableCors({
-      origin: configService.get('FRONTEND_DEV_URL', 'http://localhost:4200'),
+      origin: configService.get<string>(
+        'FRONTEND_DEV_URL',
+        'http://localhost:4200',
+      ),
       credentials: true,
     });
   }

@@ -2,10 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { FrontendService } from './frontend/frontend.service';
 import { ClientsService } from './clients/clients.service';
 import { UsersService } from './users/users.service';
-import { OAuthModule } from './oauth/oauth.module';
+import { OAuthController } from './oauth/oauth.controller';
+import { OAuthService } from './oauth/oauth.service';
+import { FrontendController } from './frontend/frontend.controller';
+import { FrontendService } from './frontend/frontend.service';
 
 @Module({
   imports: [
@@ -20,15 +22,15 @@ import { OAuthModule } from './oauth/oauth.module';
         FRONTEND_URL: String,
       },
     }),
-    OAuthModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, OAuthController, FrontendController],
   providers: [
     ConfigService,
-    FrontendService,
     AppService,
     ClientsService,
     UsersService,
+    OAuthService,
+    FrontendService,
   ],
 })
 export class AppModule {}
