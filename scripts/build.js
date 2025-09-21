@@ -7,7 +7,7 @@ execSync('cd frontend && pnpm build', { stdio: 'inherit' });
 
 console.log('Copying files to backend...');
 const frontendDist = path.join(__dirname, '../frontend/dist');
-const backendPublic = path.join(__dirname, '../backend/public');
+const backendPublic = path.join(__dirname, '../backend/public/dist');
 
 fs.ensureDirSync(backendPublic);
 fs.copySync(frontendDist, backendPublic, { overwrite: true });

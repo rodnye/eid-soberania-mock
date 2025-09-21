@@ -12,7 +12,7 @@ async function bootstrap() {
   const isProduction = configService.get('NODE_ENV') === 'production';
 
   if (isProduction) {
-    app.useStaticAssets(join(__dirname, '..', 'public'), {
+    app.useStaticAssets(join(__dirname, '..', 'public/dist'), {
       index: false,
       redirect: false,
     });

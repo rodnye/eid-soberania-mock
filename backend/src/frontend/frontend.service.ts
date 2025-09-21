@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 
@@ -8,10 +8,7 @@ export class FrontendService {
   private readonly frontendDevUrl: string;
   private readonly _cacheFrontendDevActive: boolean | null = null;
 
-  @Inject(ConfigService) private readonly configService: ConfigService =
-    new ConfigService();
-
-  constructor() {
+  constructor(private readonly configService: ConfigService) {
     this.isProduction = this.configService.get('NODE_ENV') === 'production';
     this.frontendDevUrl = this.configService.get(
       'FRONTEND_DEV_URL',
