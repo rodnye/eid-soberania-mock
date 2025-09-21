@@ -58,4 +58,9 @@ export class OAuthController {
       redirectUrl,
     };
   }
+
+  @Post('exchange')
+  async exchangeCode(@Body('code') code: string) {
+    return await this.oauthService.exchangeAuthorizationCode(code);
+  }
 }

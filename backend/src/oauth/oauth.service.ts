@@ -43,11 +43,7 @@ export class OAuthService {
     return code;
   }
 
-  async exchangeAuthorizationCode(
-    code: string,
-    clientId: string,
-    redirectUri: string,
-  ) {
+  async exchangeAuthorizationCode(code: string) {
     const authCode = this.authorizationCodes.get(code);
 
     if (!authCode) {
@@ -61,16 +57,6 @@ export class OAuthService {
       this.authorizationCodes.delete(code);
       throw new HttpException(
         'Authorization code expired',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    if (
-      authCode.clientId !== clientId ||
-      authCode.redirectUri !== redirectUri
-    ) {
-      throw new HttpException(
-        'Invalid client or redirect URI',
         HttpStatus.BAD_REQUEST,
       );
     }

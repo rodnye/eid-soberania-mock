@@ -33,26 +33,22 @@ export class ClientsService {
   /**
    * Verify if the provided redirect_url is the same domain of the client
    */
-  verifyClientUrl(clientId: string, url: string) {
+  verifyClientUrl(clientId: string, url: string): boolean {
     const client = this.findOne(clientId);
     if (!client) throw new Error('Client not found');
 
     const domain = client.domain;
-    let partialUrl = url;
-    const protocolRegx = /^https{0,1}:\/\//;
+    const protocolRegx = /^https?:\/\//;
 
-    if (protocolRegx.exec(url)) {
-      partialUrl = url.replace(protocolRegx, '');
-
-      partialUrl = partialUrl
-        //obtener dominio
-        .split('/')[0]
-        // obtener segmento antes del puerto
-        .split(':')[0];
-
-      if (partialUrl.lastIndexOf(domain) === partialUrl.length - domain.length)
-        return true;
+    if (!protocolRegx.test(url)) {
+      throw new Error('Invalid URL format');
     }
-    return false;
+
+    const partialUrl = url
+      .replace(protocolRegx, '')
+      .split('/')[0]
+      .split(':')[0];
+
+    return partialUrl === domain || partialUrl.endsWith(`.${domain}`);
   }
 }
