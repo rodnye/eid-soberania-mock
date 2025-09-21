@@ -1,5 +1,4 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
 import { randomBytes } from 'crypto';
 
 interface AuthorizationCode {
@@ -15,8 +14,10 @@ interface AuthorizationCode {
 @Injectable()
 export class OAuthService {
   private authorizationCodes: Map<string, AuthorizationCode> = new Map();
+  private accessTokens: Map<string, { cid: string; expiresAt: Date }> =
+    new Map();
 
-  constructor(private readonly usersService: UsersService) {}
+  constructor() {}
 
   async generateAuthorizationCode(
     clientId: string,
@@ -76,7 +77,7 @@ export class OAuthService {
 
     this.authorizationCodes.delete(code);
 
-    const accessToken = this.generateAccessToken();
+    const accessToken = this.generateAccessToken(authCode);
     const refreshToken = this.generateRefreshToken();
 
     return {
@@ -88,18 +89,21 @@ export class OAuthService {
     };
   }
 
-  private generateAccessToken(): string {
-    return randomBytes(32).toString('hex');
+  private generateAccessToken(authCode: AuthorizationCode): string {
+    const token = randomBytes(32).toString('hex');
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 1);
+    this.accessTokens.set(token, { cid: authCode.cid, expiresAt });
+    this.authorizationCodes.delete(authCode.code);
+
+    return token;
   }
 
   private generateRefreshToken(): string {
     return randomBytes(32).toString('hex');
   }
 
-  async verifyAuthorizationCode(
-    code: string,
-    clientId: string,
-  ): Promise<boolean> {
+  async verifyAuthorizationCode(code: string): Promise<boolean> {
     const authCode = this.authorizationCodes.get(code);
 
     if (!authCode) {
@@ -111,6 +115,20 @@ export class OAuthService {
       return false;
     }
 
-    return authCode.clientId === clientId;
+    return true;
+  }
+
+  verifyAccessToken(token: string): string | null {
+    const tokenData = this.accessTokens.get(token);
+    if (!tokenData) {
+      return null;
+    }
+
+    if (tokenData.expiresAt < new Date()) {
+      this.accessTokens.delete(token);
+      return null;
+    }
+
+    return tokenData.cid;
   }
 }

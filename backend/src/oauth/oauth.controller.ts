@@ -9,7 +9,7 @@ import { OAuthService } from './oauth.service';
 import { ClientsService } from '../clients/clients.service';
 import { UsersService } from '../users/users.service';
 
-@Controller('oauth')
+@Controller('api/oauth')
 export class OAuthController {
   constructor(
     private readonly oauthService: OAuthService,
@@ -57,32 +57,5 @@ export class OAuthController {
     return {
       redirectUrl,
     };
-  }
-
-  @Post('verify-code')
-  async validateCode(
-    @Body('code') code: string,
-    @Body('client_id') clientId: string,
-  ) {
-    if (!code || !clientId) {
-      throw new HttpException(
-        'Missing required parameters',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const isValid = await this.oauthService.verifyAuthorizationCode(
-      code,
-      clientId,
-    );
-
-    if (!isValid) {
-      throw new HttpException(
-        'Invalid authorization code',
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
-
-    return { valid: true };
   }
 }

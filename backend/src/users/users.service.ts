@@ -47,8 +47,8 @@ export class UsersService {
     return user;
   }
 
-  verifyPassword(cid: string, password: string): boolean {
-    const user = this.findOne(cid);
+  verifyPassword(email: string, password: string): boolean {
+    const user = this.findByEmail(email);
     return user ? user.password === password : false;
   }
 
