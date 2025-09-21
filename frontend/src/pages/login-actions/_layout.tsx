@@ -14,6 +14,18 @@ export const AuthPageLayout = () => {
     action: Action;
   }>();
 
+  const validateOAuthParams = () => {
+    if (action !== 'authenticate') return true;
+
+    const searchParams = new URLSearchParams(window.location.search);
+    const requiredParams = ['client_id', 'redirect_uri'];
+
+    return requiredParams.every((param) => searchParams.has(param));
+  };
+
+  const isValidRoute = validateOAuthParams();
+  const effectiveAction = !isValidRoute ? 'error' : action;
+
   return (
     <div className="flex flex-col items-center justify-center text-center">
       <div className="m-3 flex w-full max-w-lg flex-col items-center rounded-xl p-6 md:border md:border-gray-300">
@@ -32,17 +44,18 @@ export const AuthPageLayout = () => {
         </div>
 
         <h1 className="mt-4 text-3xl font-light text-cyan-600">
-          {action === 'authenticate' && 'Iniciar Sesión'}
-          {action === 'registration' && 'Crear Cuenta'}
-          {action === 'reset-credentials' && 'Nueva Contraseña'}
+          {effectiveAction === 'authenticate' && 'Iniciar Sesión'}
+          {effectiveAction === 'registration' && 'Crear Cuenta'}
+          {effectiveAction === 'reset-credentials' && 'Nueva Contraseña'}
+          {effectiveAction === 'error' && 'Error'}
         </h1>
 
         <div className="flex w-full flex-col items-center text-gray-600">
-          {action === 'authenticate' ? (
+          {effectiveAction === 'authenticate' ? (
             <AuthenticateRoute />
-          ) : action === 'registration' ? (
+          ) : effectiveAction === 'registration' ? (
             <RegistrationRoute />
-          ) : action === 'reset-credentials' ? (
+          ) : effectiveAction === 'reset-credentials' ? (
             <ResetCredentialsRoute />
           ) : (
             <ErrorRoute />

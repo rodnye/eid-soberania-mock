@@ -5,18 +5,28 @@ export interface LinkProps {
   to?: string;
   onClick?: () => void;
   children: React.ReactNode;
+  keepParams?: boolean;
 }
 
-export const Link = ({ className = '', to, onClick, children }: LinkProps) => {
+export const Link = ({
+  className = '',
+  to,
+  onClick,
+  children,
+  keepParams = true,
+}: LinkProps) => {
   const fullClassName =
     'text-blue-600 hover:text-red-500 cursor-pointer select-none ' + className;
 
-  if (to)
+  if (to) {
+    const href = keepParams ? `${to}${window.location.search}` : to;
+
     return (
-      <WouterLink to={to} className={fullClassName}>
+      <WouterLink href={href} className={fullClassName}>
         {children}
       </WouterLink>
     );
+  }
 
   if (onClick)
     return (
@@ -24,4 +34,6 @@ export const Link = ({ className = '', to, onClick, children }: LinkProps) => {
         {children}
       </span>
     );
+
+  return null;
 };
