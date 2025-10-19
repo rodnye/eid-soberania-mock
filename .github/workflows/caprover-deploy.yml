@@ -39,6 +39,7 @@ jobs:
           files: |
             backend/
             captain-definition
+            package.json
           outPath: deploy.tar
 
       - name: Deploy App to CapRover
