@@ -4,8 +4,7 @@ FROM node:20-alpine
 RUN npm i -g pnpm
 WORKDIR /app
 
-# en esta app solo se usa el backend ya construido
-COPY backend/ ./
+COPY ./ ./
 
 RUN pnpm install --frozen-lockfile --prod
 

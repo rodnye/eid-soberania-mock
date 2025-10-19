@@ -29,7 +29,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
       
-      - run: pnpm i
+      - run: pnpm i --frozen-lockfile
       - run: pnpm build
 
       - uses: a7ul/tar-action@v1.1.0
@@ -37,10 +37,15 @@ jobs:
           command: c
           cwd: "./"
           files: |
-            backend/
+            backend/dist
+            backend/public
+            backend/package.json
+            backend/pnpm-lock.yaml
+
             .github/caprover-deploy.dockerfile
             captain-definition
             package.json
+            pnpm-lock.yaml
           outPath: deploy.tar
 
       - name: Deploy App to CapRover
