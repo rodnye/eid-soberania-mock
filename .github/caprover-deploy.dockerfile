@@ -1,4 +1,4 @@
-# se asume que ya se hizo previamente pnpm build (ver ./.github/workflows/caprover-deploy.yml)
+# se asume que ya se hizo previamente pnpm build (ver ./workflows/caprover-deploy.yml)
 FROM node:20-alpine
 
 RUN npm i -g pnpm

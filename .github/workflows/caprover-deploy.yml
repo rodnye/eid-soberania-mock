@@ -38,6 +38,7 @@ jobs:
           cwd: "./"
           files: |
             backend/
+            .github/caprover-deploy.dockerfile
             captain-definition
             package.json
           outPath: deploy.tar
